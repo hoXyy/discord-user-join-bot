@@ -14,7 +14,7 @@ client.on("ready", () => {
 // Send message on user join
 client.on("guildMemberAdd", (member) => {
   member.guild.channels.fetch(process.env.CHANNEL_ID!).then((channel) => {
-    (channel as TextChannel).send(`<@${member.user.id}> dołączył na serwer.`);
+    (channel as TextChannel).send(`<@${member.user.id}> (nick przy dołączeniu: ${member.user.id}) dołączył na serwer.`);
   });
 });
 
