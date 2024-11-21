@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:16-alpine3.18
 
 RUN corepack enable
 RUN corepack prepare pnpm@8.0.0 --activate
