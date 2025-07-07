@@ -2,3 +2,7 @@ services:
   bot:
     build: .
     restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./.env
+        target: /discord-user-join-bot/.env
