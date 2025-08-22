@@ -27,3 +27,4 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ github.token }}
           report-json: "eslint_report.json"
+          only-pr-files: false
