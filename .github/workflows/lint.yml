@@ -1,0 +1,24 @@
+name: Code linting check
+
+on: [pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare --activate
+      - name: Set Up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Run ESLint
+        run: pnpm lint:ci
+        continue-on-error: true
