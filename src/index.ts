@@ -1,26 +1,59 @@
-import { Client, GatewayIntentBits, TextChannel } from "discord.js";
-const { Guilds, GuildMessages, GuildMembers } = GatewayIntentBits;
-const client = new Client({ intents: [Guilds, GuildMessages, GuildMembers] });
+import { Client, GatewayIntentBits, type TextChannel } from "discord.js";
 import { config } from "dotenv";
+
 config();
 
-// Login to Discord
-client.login(process.env.TOKEN);
+(async (): Promise<void> => {
+  const { Guilds, GuildMessages, GuildMembers } = GatewayIntentBits;
+  const client = new Client({ intents: [Guilds, GuildMessages, GuildMembers] });
 
-client.on("ready", () => {
-  console.log("Ready!");
-});
+  // Login to Discord
+  await client.login(process.env.TOKEN);
 
-// Send message on user join
-client.on("guildMemberAdd", (member) => {
-  member.guild.channels.fetch(process.env.CHANNEL_ID!).then((channel) => {
-    (channel as TextChannel).send(`<@${member.user.id}> (nick przy dołączeniu: ${member.user.tag}) dołączył na serwer.`);
+  client.on("ready", () => {
+    console.log("Ready!");
   });
-});
 
-// Send message on user leaving
-client.on("guildMemberRemove", (member) => {
-  member.guild.channels.fetch(process.env.CHANNEL_ID!).then((channel) => {
-    (channel as TextChannel).send(`${member.user.tag} wyszedł z serwera.`);
-  });
+  // Send message on user join
+  client.on("guildMemberAdd",
+    async (member) => {
+      try {
+        const channel = await member.guild.channels.fetch(process.env.CHANNEL_ID!);
+        if (!channel) {
+          return;
+        }
+        await (channel as TextChannel).send(`<@${member.user.id}> (nick przy dołączeniu: ${member.user.tag}) dołączył na serwer.`);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error(`[ERROR] Failed to send join message: ${error.message}`);
+        } else {
+          console.error(`[ERROR] Failed to send join message: ${error}`);
+        }
+      }
+    });
+
+  // Send message on user leaving
+  client.on("guildMemberRemove",
+    async (member) => {
+      try {
+        const channel = await member.guild.channels.fetch(process.env.CHANNEL_ID!);
+        if (!channel) {
+          return;
+        }
+        await (channel as TextChannel).send(`${member.user.tag} wyszedł z serwera.`);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error(`[ERROR] Failed to send leave message: ${error.message}`);
+        } else {
+          console.error(`[ERROR] Failed to send leave message: ${error}`);
+        }
+      }
+    });
+})().catch((err: unknown) => {
+  if (err instanceof Error) {
+    console.error(err.message);
+  } else {
+    console.error(err);
+  }
+  process.exit(1);
 });

@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "lint": "eslint src",
+    "lint:report": "eslint --output-file eslint_report.json --format json src"
   },
   "author": "hoxi",
   "license": "GPLv3",
@@ -15,6 +17,7 @@
     "dotenv": "^17.0.1"
   },
   "devDependencies": {
+    "@gramypomagamy/eslint-config": "^2.0.0",
     "@tsconfig/node22": "^22.0.2",
     "typescript": "^5.8.3"
   },
